@@ -1,81 +1,121 @@
+//2015004584_배지운_A
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <vector>
+
+using namespace std;
 
 #define __type__ int
-#define __container__ int*
+#define __container__ vector<int>
+#define NIL -987654321
 
+int input(void);
 void input(__container__, int);
-void printr(__container__);
-void print(__container__);
-void process(__container__);
+void process(__container__&);
 
-int n, k;
+int idx = 0;
+vector<int> ext;
 void swap(int * first, int * second)
 {
-    if (*first - *second)
-        *first ^= *second ^= *first ^= *second;
+    int x = *first;
+    *first = *second;
+    *second = x;
 }
+
 int main()
 {
-    scanf("%d %d", &n, &k);
-    __container__ v = (__container__)malloc(sizeof(__type__) * n);
-    input(v, n);
+    __container__ v(1, 1987654321);
     process(v);
-
-    for(int i = n - 1; i >= n-k; --i)
-        printf("%d ", v[i]);
-    printf("\n");
-    for(int i = n - k - 1; i >= 0; --i)
-        printf("%d ", v[i]);
-    
-    free(v);
     return 0;
 }
 
-void process_(__container__ v, int n, int i)
+void process_(__container__& v, int i)
 {
-    int largest = i;
-    int l = 2*i + 1;
-    int r = 2*i + 2;
-
-    if (l < n && v[l] > v[largest])
-        largest = l;
- 
-    if (r < n && v[r] > v[largest])
-        largest = r;
- 
-    if (largest != i)
+    if (i <= 0)
+        return;
+    
+    if (v[i] > v[i/2])
     {
-        swap(&v[i], &v[largest]);
-        process_(v, n, largest);
-    }
-}
- 
-void process(__container__ v)
-{
-    for (int i = n / 2 - 1; i >= 0; i--)
-        process_(v, n, i);
- 
-    for (int i=n-1; i>=0; i--)
-    {
-        swap(&v[0], &v[i]);
-        process_(v, i, 0);
+        swap(v[i], v[i/2]);
+        process_(v, i/2);
     }
 }
 
+void process__(__container__& v, int i)
+{
+    if (i * 2 >= (int)v.size())
+        return;
+    
+    int n;
+    if (i * 2 == v.size()-1)
+        n = i * 2;
+    else
+        n = v[i * 2] > v[i * 2 + 1] ? i * 2 : i * 2 + 1;
+    
+
+
+    if (v[i] < v[n])
+    {
+        swap(v[i], v[n]);
+        process__(v, n);
+    }
+}
+void process(__container__& v)
+{
+    for (;;)
+    {
+        int a = input();
+        switch (a)
+        {
+            case 0:
+                for (int i = 0; i < (int)ext.size(); ++i)
+                    printf("%d ", ext[i]);
+                printf("\n");
+                for (int i = 1; i < (int)v.size(); ++i)
+                    printf("%d ", v[i]);
+                printf("\n");
+                return;
+                
+            case 1:
+            {
+                int d = input();
+                v.push_back(d);
+                process_(v, (int)v.size() - 1);
+                break;
+            }
+            case 2:
+            {
+                ext.push_back(v[1]);
+                v[1] = v.back();
+                v.pop_back();
+                process__(v, 1);
+                
+                break;
+            }
+            case 3:
+            {
+                int x = input(), y = input();
+                v[x] = y;
+                
+                if (v[x] > v[x/2])
+                    process_(v, x);
+                else
+                    process__(v, x);
+                
+                break;   
+            }
+        }
+    }
+}
+
+int input()
+{
+    int t; scanf("%d", &t);
+    return t;
+}
 void input(__container__ container, int size)
 {
     for(int i = 0; i < size; ++i)
         scanf("%d", &container[i]);
-}
-void printr(__container__ container)
-{
-    for(int i = n - 1; i >= 0; --i)
-        printf("%d\n", container[i]);
-}
-void print(__container__ container)
-{
-    for(int i = 0; i < n; ++i)
-        printf("%d\n", container[i]);
 }
