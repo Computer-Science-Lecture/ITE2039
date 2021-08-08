@@ -2,7 +2,7 @@
 
 #include <stdio.h>
 
-// dijkstra from https://github.com/MaybeS/ICPC2016/tree/master/headers
+// dijkstra from https://github.com/jiunbae/ICPC2016/tree/master/headers
 #pragma once
 #include <queue>
 #include <vector>
